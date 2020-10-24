@@ -1,0 +1,193 @@
+<app-modal-basic #modal [dialogClass]="'modal-lg'">
+    <div class="app-modal-header">
+        <h4 class="modal-title">Visualizando cotação {{this._cotacao.cotacao}}</h4>
+        <button type="button" class="close basic-close" (click)="this.modal.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="app-modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <label for="mercado">Mercado</label>
+                <input id="mercado"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.mercado.nome"
+                       disabled/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="validoAte">Válido até</label>
+                <input id="validoAte"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.dataEncerramento | date: 'dd/MM/yyyy'"
+                       disabled/>
+            </div>
+            <div class="col-md-3">
+                <label for="cnpjClienteSG">CNPJ cliente SG</label>
+                <input id="cnpjClienteSG"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.cnpjClienteSG"
+                       [mask]="'00.000.000/0000-00'"
+                       disabled/>
+            </div>
+            <div class="col-md-3">
+                <label for="cnpjFornecedor">CNPJ fornecedor</label>
+                <input id="cnpjFornecedor"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.cnpjFornecedor"
+                       disabled/>
+            </div>
+            <div class="offset-md-2 col-md-2">
+                <label for="prazo">Prazo</label>
+                <input id="prazo"
+                       type="number"
+                       class="form-control"
+                       [(ngModel)]="this._prazo"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="observacao">Observação</label>
+                <textarea id="observacao"
+                          type="text"
+                          class="form-control"
+                          [maxLength]="255"
+                          [(ngModel)]="this._cotacao.observacao"></textarea>
+            </div>
+        </div>
+        <div class="row m-t-5">
+            <div class="col-md-12">
+                <ngx-datatable
+                    #myTable
+                    class="data-table table-responsive table-item-cotacao"
+                    [rows]="this._rows"
+                    [columnMode]="this._tableConfig.columnMode"
+                    [headerHeight]="this._tableConfig.headerHeight"
+                    [footerHeight]="this._tableConfig.footerHeight"
+                    [rowHeight]="this._tableConfig.rowHeight"
+                    [scrollbarV]="true"
+                    [scrollbarH]="true"
+                    [messages]="this.onGetMessages()">
+
+                    <ngx-datatable-column name="Desc. Produto"
+                                          [prop]="'descPro'"
+                                          [width]="320"
+                                          [maxWidth]="320">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{  row.descPro }}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Cód. Barra"
+                                          [prop]="'codBarra'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="cursor-pointer" (click)="this.onClickCodBarra(row)">{{  row.codBarra }}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Qtde"
+                                          [prop]="'quantidade'"
+                                          [width]="90"
+                                          [maxWidth]="90">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{  row.quantidade }}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Qtde. Emb"
+                                          [prop]="'qtdeEmb'"
+                                          [width]="120"
+                                          [maxWidth]="120">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{  row.qtdeEmb }}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Un."
+                                          [prop]="'unidade'"
+                                          [width]="70"
+                                          [maxWidth]="70">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{  row.unidade }}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Desc(%)"
+                                          [prop]="'percDesc'"
+                                          [width]="100"
+                                          [maxWidth]="100">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value"
+                                     ngx-datatable-cell-template>
+                            <span (dblclick)="this.isHabilitarEditacao() ? editing[rowIndex + '-percDesc'] = true : editing[rowIndex + '-percDesc'] = false"
+                                  *ngIf="!editing[rowIndex + '-percDesc']">{{  row.percDesc }}</span>
+                            <input
+                                    autofocus
+                                    (blur)="this.onUpdateValue($event, 'percDesc', rowIndex)"
+                                    *ngIf="editing[rowIndex+ '-percDesc']"
+                                    type="number"
+                                    [value]="value"
+                                    class="form-control"
+                            />
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Preço Emb"
+                                          [prop]="'precoEmb'">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value"
+                                     ngx-datatable-cell-template>
+                            <span (dblclick)="this.isHabilitarEditacao() ? editing[rowIndex + '-precoEmb'] = true : editing[rowIndex + '-precoEmb'] = false"
+                                  *ngIf="!editing[rowIndex + '-precoEmb']">{{  row.precoEmb | currency: 'BRL' }}</span>
+                            <input
+                                    autofocus
+                                    (blur)="this.onUpdateValue($event, 'precoEmb', rowIndex)"
+                                    *ngIf="editing[rowIndex+ '-precoEmb']"
+                                    type="number"
+                                    [value]="value"
+                                    class="form-control"
+                            />
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Preço Un."
+                                          [prop]="'preco'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value"
+                                         ngx-datatable-cell-template>
+                            <span (dblclick)="this.isHabilitarEditacao() ? editing[rowIndex + '-preco'] = true : editing[rowIndex + '-preco'] = false"
+                                  *ngIf="!editing[rowIndex + '-preco']">{{  row.preco | currency: 'BRL' }}</span>
+                                <input
+                                        autofocus
+                                        (blur)="this.onUpdateValue($event, 'preco', rowIndex)"
+                                        *ngIf="editing[rowIndex+ '-preco']"
+                                        type="number"
+                                        [value]="value"
+                                        class="form-control"
+                                />
+                            </ng-template>
+
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Preço Total"
+                                          [sortable]="false"
+                                          [prop]="'precoTotal'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{  this.onGetPrecoTotal(row) | currency: 'BRL'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                </ngx-datatable>
+            </div>
+        </div>
+    </div>
+    <div class="app-modal-footer">
+        <button type="button" class="btn btn-primary waves-effect waves-light" (click)="this.onSalvar()">Salvar
+            Alterações
+        </button>
+    </div>
+</app-modal-basic>

@@ -1,0 +1,11 @@
+.form-group {
+  > label {
+    display: flex;
+    align-items: center;
+    .form-control {
+      max-width: 100px;
+      margin: 0 10px;
+      direction: rtl;
+    }
+  }
+}

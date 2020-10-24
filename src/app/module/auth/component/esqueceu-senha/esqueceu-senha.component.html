@@ -1,0 +1,190 @@
+<section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="login-card card-block auth-body mr-auto ml-auto">
+
+                    <form class="md-float-material"
+                          *ngIf="this._isSolicitandoChave"
+                          [formGroup]="this._formGroupEmail"
+                          (ngSubmit)="this.onEnviarChaveRecuperacao()">
+                        <div class="text-center">
+                            <img src="assets/images/logo.png" alt="logo.png">
+                        </div>
+                        <div class="auth-box">
+                            <div class="row m-b-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-left">Recuperação de senha</h3>
+                                </div>
+                            </div>
+                            <p class="text-inverse b-b-default text-right">Voltar ao <span class="voltar-login" [routerLink]="''">Login.</span></p>
+                            <div class="form-group">
+                                <input type="email"
+                                       class="form-control"
+                                       placeholder="Informe o seu email"
+                                       [(ngModel)]="this._email"
+                                       formControlName="email">
+                                <div class="messages text-danger text-left"
+                                     *ngIf="this._formGroupEmail.controls.email.errors?.required && this._formGroupEmail.controls.email.touched">
+                                    Email é obrigatório.
+                                </div>
+                                <div class="messages text-danger text-left"
+                                     *ngIf="this._formGroupEmail.controls.email.errors?.pattern && this._formGroupEmail.controls.email.touched">
+                                    Email está inválido.
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit"
+                                            [disabled]="this._formGroupEmail.invalid"
+                                            class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">
+                                        <span *ngIf="!this._isLoading">SOLICITAR SENHA DE RECUPERAÇÃO</span>
+
+                                        <div class="loading"
+                                             *ngIf="this._isLoading">
+                                            <div class="circ1"></div>
+                                            <div class="circ2"></div>
+                                            <div class="circ3"></div>
+                                            <div class="circ4"></div>
+                                        </div>
+
+                                    </button>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <p class="text-inverse text-left m-b-0">Versão {{this.onGetVersion()}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form class="md-float-material"
+                          *ngIf="!this._isSolicitandoChave && !this._usuario.id"
+                          [formGroup]="this._formGroupChave"
+                          (ngSubmit)="this.onRecuperarSenha()">
+                        <div class="text-center">
+                            <img src="assets/images/logo.png" alt="logo.png">
+                        </div>
+                        <div class="auth-box">
+                            <div class="row m-b-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-left">Recuperação de senha</h3>
+                                </div>
+                            </div>
+                            <p class="text-inverse b-b-default text-right">Voltar ao <span class="voltar-login" [routerLink]="''">Login.</span></p>
+                            <div class="form-group">
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Informe a chave de recuperação"
+                                       [(ngModel)]="this._chaveRecuperacao"
+                                       formControlName="chaveRecuperacao">
+                                <div class="messages text-danger text-left"
+                                     *ngIf="this._formGroupChave.controls.chaveRecuperacao.errors?.required && this._formGroupChave.controls.chaveRecuperacao.touched">
+                                    Chave de recuperação é obrigatório.
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit"
+                                            [disabled]="this._formGroupChave.invalid"
+                                            class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">
+                                        <span *ngIf="!this._isLoading">SOLICITAR TROCA DE SENHA</span>
+
+                                        <div class="loading"
+                                             *ngIf="this._isLoading">
+                                            <div class="circ1"></div>
+                                            <div class="circ2"></div>
+                                            <div class="circ3"></div>
+                                            <div class="circ4"></div>
+                                        </div>
+
+                                    </button>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <p class="text-inverse text-left m-b-0">Versão {{this.onGetVersion()}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form class="md-float-material"
+                          *ngIf="!this._isSolicitandoChave && this._usuario.id"
+                          [formGroup]="this._formGroupAlterarSenha"
+                          (ngSubmit)="this.onAlterarSenha()">
+                        <div class="text-center">
+                            <img src="assets/images/logo.png" alt="logo.png">
+                        </div>
+                        <div class="auth-box">
+                            <div class="row m-b-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-left">Alterar senha do usuário <span class="usuario-nome">{{this._usuario.nome}}</span></h3>
+                                </div>
+                            </div>
+                            <p class="text-inverse b-b-default text-right">Voltar ao <span class="voltar-login" [routerLink]="''">Login.</span></p>
+                            <div class="form-group">
+                                <input type="password"
+                                       class="form-control"
+                                       placeholder="Informe a nova senha"
+                                       [(ngModel)]="this._novaSenha"
+                                       formControlName="novaSenha">
+                                <div class="messages text-danger text-left"
+                                     *ngIf="this._formGroupAlterarSenha.controls.novaSenha.errors?.required && this._formGroupAlterarSenha.controls.novaSenha.touched">
+                                    A nova senha é obrigatório.
+                                </div>
+                                <div class="messages text-danger text-left"
+                                     *ngIf="this._formGroupAlterarSenha.controls.novaSenha.errors?.minlength && this._formGroupAlterarSenha.controls.novaSenha.touched">
+                                    Informe no mínimo 6 caracteres.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="password"
+                                       class="form-control"
+                                       placeholder="Informe a confirmação de senha"
+                                       formControlName="confirmacaoSenha">
+                                <div class="messages text-danger text-left"
+                                     *ngIf="this._formGroupAlterarSenha.controls.confirmacaoSenha.errors?.required && this._formGroupAlterarSenha.controls.confirmacaoSenha.touched">
+                                    A confirmação de senha é obrigatório.
+                                </div>
+                                <div class="messages text-danger text-left"
+                                     *ngIf="this._formGroupAlterarSenha.controls.confirmacaoSenha.errors?.mustMatch">
+                                    Confirmação de senha não é compatível com a nova senha.
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit"
+                                            [disabled]="this._formGroupAlterarSenha.invalid"
+                                            class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">
+                                        <span *ngIf="!this._isLoading">ALTERAR SENHA</span>
+
+                                        <div class="loading"
+                                             *ngIf="this._isLoading">
+                                            <div class="circ1"></div>
+                                            <div class="circ2"></div>
+                                            <div class="circ3"></div>
+                                            <div class="circ4"></div>
+                                        </div>
+
+                                    </button>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <p class="text-inverse text-left m-b-0">Versão {{this.onGetVersion()}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<ng2-toasty></ng2-toasty>

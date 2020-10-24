@@ -1,0 +1,112 @@
+<div class="row" *ngIf="!this.isChildren">
+  <div class="col-md-4">
+    <app-filial (onChange)="this.onFilialChange($event)"></app-filial>
+  </div>
+  <div class="offset-md-3 col-md-5 align-c">
+    <app-filtro [filters]="this._filters"
+                [filtersSelected]="[this._filtro]"
+                (filter)="this.onFilter($event)"
+                (remove)="this.onRemoveFilter($event)"></app-filtro>
+  </div>
+</div>
+
+<app-card [title]="'Listagem de fornecedor'"
+          [cardOptionBlock]="true" [ngClass]="{'c-wait' : this.buscando}">
+  <button class="btn btn-success btn-adicionar"
+          type="button"
+          (click)="this.onAdicionar()" *ngIf="this._permissions?.hasPermissionInserirFornecedor && !this._usuarioLogado.isFornecedor()">
+    <i class="icofont icofont-ui-add"></i>Adicionar
+  </button>
+  <ngx-datatable
+          #myTable
+          class="data-table table-responsive"
+          [rows]="this._rows"
+          [columnMode]="this._tableConfig.columnMode"
+          [headerHeight]="this._tableConfig.headerHeight"
+          [footerHeight]="this._tableConfig.footerHeight"
+          [rowHeight]="this._tableConfig.rowHeight"
+          [selected]="this._rowSelected"
+          [selectionType]="'checkbox'"
+          [count]="this._page.numReg"
+          [offset]="this._page.pagina"
+          [limit]="this._page.limit"
+          [externalPaging]="this._tableConfig.externalPaging"
+          [externalSorting]="this._tableConfig.externalSorting"
+          (page)="this.onPage($event)"
+          (sort)="this.onSort($event)"
+          [messages]="this.onGetMessages()">
+
+
+
+    <ngx-datatable-column name="Razão Social"
+                          [prop]="'nome'"
+                          [resizeable]="false"
+                          [width]="200"
+                          [maxWidth]="500">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.nome }}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Nome Fantasia"
+                          [prop]="'fantasia'"
+                          [resizeable]="false"
+                          [width]="200"
+                          [maxWidth]="500">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.fantasia }}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="CNPJ"
+                          [prop]="'cnpj'"
+                          [resizeable]="false"
+                          [width]="160"
+                          [maxWidth]="160">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.cnpj | mask: '00.000.000/0000-00' }}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Telefone"
+                          [prop]="'foneComercial'"
+                          [resizeable]="false"
+                          [width]="80"
+                          [maxWidth]="300">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.foneComercial }}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Cidade"
+                          [prop]="'endereco.cidade'"
+                          [resizeable]="false"
+                          [width]="150"
+                          [maxWidth]="300">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.endereco.cidade }}
+      </ng-template>
+
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Opções"
+                          [sortable]="false"
+                          [resizeable]="false"
+                          [width]="120"
+                          [maxWidth]="120">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <button class="b-r-2 btn-icon btn-primary" *ngIf="this._permissions?.hasPermissionAlterarFornecedor"
+                [ngbTooltip]="'Alterar'"
+                (click)="this.onAlterar(row.id)">
+          <i class="icofont icofont-ui-edit"></i>
+        </button>
+        <button class="m-l-5 b-r-2 btn-icon btn-danger" *ngIf="this._permissions?.hasPermissionExcluirFornecedor"
+                [ngbTooltip]="'Excluir'"
+                (click)="this.onExcluir(row)">
+          <i class="icofont icofont-trash"></i>
+        </button>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</app-card>
+<ng2-toasty></ng2-toasty>
+<app-modal-fornecedor-inserir-alterar #modalAlterar></app-modal-fornecedor-inserir-alterar>

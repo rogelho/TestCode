@@ -1,0 +1,120 @@
+<app-modal-basic #modalTrocarSenhaUsuarios [dialogClass]="'modal-md'">
+  <div class="app-modal-header">
+    <h4 class="modal-title">Alterar Senha de Usuário</h4>
+    <button type="button" class="close basic-close" (click)="this.modalTrocarSenhaUsuarios.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <div class="messages text-warning text-center" *ngIf="this.showCapsMsg">
+      Caps Lock está ativado
+    </div>
+    <label>Selecione o usuário:</label>
+    <ng-select *ngIf="!this.buscandoUsuarios" [ngClass]="'ng-select'" class="mb-3"
+               [options]="this.usuariosOption"
+               (selected)="this.onChangeUsuario($event)"
+    ></ng-select>
+    <div *ngIf="this.buscandoUsuarios" style="height: 46px">
+      Carregando usuários ...
+    </div>
+    <form
+      class="md-float-material"
+      (ngSubmit)="this.onAlterarSenha()"
+      [formGroup]="this._formGroupAlterarSenha">
+      <div class="row mb-2">
+        <div class="col">
+          <span>Tipo: <b>{{ this.getTipoUsuaro(this.usuarioSelecionado?.tipo)}}</b></span>
+        </div>
+        <div class="col text-right">
+          <span>Status: <b [ngClass]="this.usuarioSelecionado?.situacao == 'A'? 'text-success': 'text-warning'"> {{ this.getStatusUsuario(this.usuarioSelecionado?.situacao) }}</b></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Nova Senha:</label>
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Informe a nova senha"
+          formControlName="novaSenha"
+          (ngModelChange)="this.checkStrength()"
+        />
+        <div
+          class="messages text-danger text-left"
+          *ngIf="this._formGroupAlterarSenha.controls.novaSenha.errors?.required && this._formGroupAlterarSenha.controls.novaSenha.touched"
+        >
+          A nova senha é obrigatório.
+        </div>
+        <div
+          class="messages text-danger text-left"
+          *ngIf="this._formGroupAlterarSenha.controls.novaSenha.errors?.notMustMatch && this._formGroupAlterarSenha.controls.novaSenha.touched"
+        >
+          Nova senha deve ser diferente da antiga senha.
+        </div>
+        <div
+          class="messages text-danger text-left"
+          *ngIf="this._formGroupAlterarSenha.controls.novaSenha.errors?.minlength && this._formGroupAlterarSenha.controls.novaSenha.touched"
+        >
+          Informe no mínimo 6 caracteres.
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirmação Nova Senha:</label>
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Informe a confirmação de senha"
+          formControlName="confirmacaoSenha"
+        />
+        <div
+          class="messages text-danger text-left"
+          *ngIf="this._formGroupAlterarSenha.controls.confirmacaoSenha.errors?.required && this._formGroupAlterarSenha.controls.confirmacaoSenha.touched"
+        >
+          A confirmação de senha é obrigatório.
+        </div>
+        <div
+          class="messages text-danger text-left"
+          *ngIf="this._formGroupAlterarSenha.controls.confirmacaoSenha.errors?.mustMatch && this._formGroupAlterarSenha.controls.confirmacaoSenha.touched"
+        >
+          Confirmação de senha não é compatível com a nova senha.
+        </div>
+      </div>
+      <div class="row progress-wrapper" *ngIf="this._formGroupAlterarSenha.controls.novaSenha.value">
+        <div class="progress">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [ngStyle]="this.styleProgress"
+          >
+            {{this.textProgress}}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button
+            type="submit"
+            [disabled]="this._formGroupAlterarSenha.invalid || this.forcaSenha < 33"
+            class="btn btn-primary btn-md btn-block waves-effect text-center"
+          >
+            <span *ngIf="!this._isLoading">SALVAR REGISTRO</span>
+
+            <div class="loading" *ngIf="this._isLoading">
+              <div class="circ1"></div>
+              <div class="circ2"></div>
+              <div class="circ3"></div>
+              <div class="circ4"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="app-modal-footer justify-content-center">
+    <button
+      type="button"
+      class="btn btn-danger waves-effect waves-light"
+      (click)="this.onCloseModal()">
+      Cancelar
+    </button>
+  </div>
+</app-modal-basic>

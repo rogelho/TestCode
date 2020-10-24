@@ -1,0 +1,85 @@
+<section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="login-card card-block auth-body mr-auto ml-auto">
+          <form class="md-float-material" [formGroup]="this._formGroup" (ngSubmit)="this.onSubmit()">
+            <div class="text-center">
+              <img src="assets/images/logo.png" alt="Gradient Able">
+            </div>
+            <div class="auth-box">
+              <div class="row m-b-20">
+                <div class="col-md-12">
+                  <h3 class="text-left txt-primary">Bem vindo ao SG Cotação</h3>
+                </div>
+              </div>
+              <hr/>
+              <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Informe o seu usuário"
+                       formControlName="usuario"
+                       [(ngModel)]="this._usuario.login">
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.usuario.errors?.required && this._formGroup.controls.usuario.touched">
+                  Usuário é obrigatório.
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="password"
+                       class="form-control"
+                       placeholder="Informe a sua senha"
+                       formControlName="senha"
+                       [(ngModel)]="this._usuario.senha">
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.senha.errors?.required && this._formGroup.controls.senha.touched">
+                  Senha é obrigatório.
+                </div>
+              </div>
+              <div class="row m-t-25 text-left">
+                <div class="col-12">
+                  <div class="checkbox-fade fade-in-primary d-">
+                    <label>
+                      <input type="checkbox" [(ngModel)]="this._lembrarMe" [ngModelOptions]="{standalone: true}">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                      <span class="text-inverse">Lembrar me</span>
+                    </label>
+                  </div>
+                  <div class="forgot-phone text-right f-right">
+                    <span [routerLink]="['/auth/esqueceu-senha']" class="esqueceu-senha text-right f-w-600">Esqueceu a senha?</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row m-t-30">
+                <div class="col-md-12">
+                  <button type="submit"
+                          class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20"
+                          [disabled]="this._formGroup.invalid">
+                    <span *ngIf="!this._isLoading">ENTRAR</span>
+
+                    <div class="loading"
+                        *ngIf="this._isLoading">
+                      <div class="circ1"></div>
+                      <div class="circ2"></div>
+                      <div class="circ3"></div>
+                      <div class="circ4"></div>
+                    </div>
+
+                  </button>
+                </div>
+              </div>
+              <hr/>
+              <div class="row">
+                <div class="col-md-10">
+                  <p class="text-inverse text-left m-b-0">Versão {{this.onGetVersion()}}</p>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<ng2-toasty></ng2-toasty>

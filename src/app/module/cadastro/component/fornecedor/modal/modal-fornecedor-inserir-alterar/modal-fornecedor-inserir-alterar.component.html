@@ -1,0 +1,214 @@
+<app-modal-basic #modal [dialogClass]="'modal-lg'"  >
+    <div class="app-modal-header">
+        <h4 class="modal-title">{{ this.editando ? 'Editar Fornecedor' : 'Inserir Fornecedor'}}</h4>
+        <button type="button" class="close basic-close" (click)="this.fechar()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="app-modal-body">
+        <div class="col-12">
+            <ngb-tabset [activeId]="cnpjValidado ? 'tabGeral' : null">
+                <ngb-tab title="CNPJ" [disabled]="cnpjValidado" id="tabCnpj">
+                    <ng-template ngbTabContent>
+                        <form [formGroup]="formularioValidaCnpj">
+
+                            <div class="row m-t-20">
+                                <div class="col-12 offset-md-4 col-md-4">
+                                    <label for="validaaCnpj">Por favor, informe o CNPJ</label>
+                                    <input id="validaaCnpj"
+                                           type="text"
+                                           class="form-control"
+                                           [ngClass]="formularioValidaCnpj.controls.cnpj.touched && formularioValidaCnpj.controls.cnpj.invalid && (!this.cnpjValido && this.submitedValidacaoCnpj) ? 'is-invalid'
+                         : formularioValidaCnpj.controls.cnpj.touched && formularioValidaCnpj.controls.cnpj.valid ? 'is-valid': null"
+                                           formControlName="cnpj"
+                                           [dropSpecialCharacters]="false" [mask]="'00.000.000/0000-00'"
+                                    />
+                                </div>
+                                <div class="col-12 offset-md-4 col-md-4 my-2" style="height: 2rem">
+                                    <div class="alert alert-danger py-0 mt-2 text-center"
+                                         *ngIf="!this.cnpjValido && this.submitedValidacaoCnpj">
+                                        CNPJ inválido
+                                    </div>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button type="button" class="btn btn-primary waves-effect waves-light"
+                                            (click)="this.buscaCnpj()">Consultar Fornecedor
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Geral" [disabled]="!cnpjValidado" id="tabGeral">
+                    <ng-template ngbTabContent>
+                        <form [formGroup]="formulario" (ngSubmit)="onSubmitFormulario()">
+
+                            <div class="row m-t-20">
+                                <div class="col-12 col-md-6">
+                                    <label for="">Por favor, informe o CNPJ</label>
+                                    <input id=""
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="cnpj"
+                                           [dropSpecialCharacters]="false" [mask]="'00.000.000/0000-00'"
+                                           disabled
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="dataCadastro">Data de cadastro</label>
+                                    <input id="dataCadastro"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="dataCadastro"
+                                           disabled
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="nome">Razão Social</label>
+                                    <input id="nome"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="nome"
+                                           [ngClass]="(formulario.controls.nome.touched || submitted) && formulario.controls.nome.invalid  ? 'is-invalid'
+                  : formulario.controls.nome.touched && formulario.controls.nome.valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="fantasia">Fantasia</label>
+                                    <input id="fantasia"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="fantasia"
+                                           [ngClass]="(formulario.controls.fantasia.touched || submitted) && formulario.controls.fantasia.invalid  ? 'is-invalid'
+                  : formulario.controls.fantasia.touched && formulario.controls.fantasia.valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="contato">Contato</label>
+                                    <input id="contato"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="contato"
+                                           [ngClass]="(formulario.controls.contato.touched || submitted) && formulario.controls.contato.invalid  ? 'is-invalid'
+                  : formulario.controls.contato.touched && formulario.controls.contato.valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="situacao">Situação</label>
+                                    <select name="" id="situacao" class="form-control" formControlName="situacao" [attr.disabled]="_usuarioLogado.isFornecedor() ? '': null"
+                                            [ngClass]="(formulario.controls.situacao.touched || submitted) &&
+                                            formulario.controls.situacao.invalid  ? 'is-invalid' : formulario.controls.situacao.touched &&
+                                            formulario.controls.situacao.valid  ? 'is-valid': null">
+                                        <option *ngFor="let situacao of situacoes" [ngValue]="situacao.data">
+                                            {{ situacao.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="foneComercial">Fone Comercial</label>
+                                    <input id="foneComercial"
+                                           mask="{{formulario.controls.foneComercial.value?.length <= 13?'(00)0000-00009':'(00)00000-0000' }}"
+                                           [dropSpecialCharacters]="false"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="foneComercial"
+                                           [ngClass]="(formulario.controls.foneComercial.value?.length >= 13 && formulario.controls.foneComercial.valid && formulario.controls.foneComercial.touched) ? 'is-valid'
+                                           : (formulario.controls.foneComercial.invalid && (formulario.controls.foneComercial.touched || submitted)  && formulario.controls.foneComercial.value?.length < 13 ) ? 'is-invalid': null"
+                                    />
+                                </div>
+                            </div>
+                            <div class="row" formGroupName="endereco">
+                                <div class="col-12 col-md-9">
+                                    <label for="endereco">Endereço</label>
+                                    <input id="endereco"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="endereco"
+                                           [ngClass]="(formulario.get('endereco').get('endereco').touched || submitted) && formulario.get('endereco').get('endereco').invalid  ? 'is-invalid'
+                                : formulario.get('endereco').get('endereco').touched && formulario.get('endereco').get('endereco').valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <label for="endereco_numero">Número</label>
+                                    <input id="endereco_numero"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="numero"
+                                           [ngClass]="(formulario.get('endereco').get('numero').touched || submitted) && formulario.get('endereco').get('numero').invalid  ? 'is-invalid'
+                  : formulario.get('endereco').get('numero').touched && formulario.get('endereco').get('numero').valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="endereco_bairro">Bairro</label>
+                                    <input id="endereco_bairro"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="bairro"
+                                           [ngClass]="(formulario.get('endereco').get('bairro').touched || submitted) && formulario.get('endereco').get('bairro').invalid  ? 'is-invalid'
+                  : formulario.get('endereco').get('bairro').touched && formulario.get('endereco').get('bairro').valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="endereco_cep">C.E.P</label>
+                                    <input id="endereco_cep"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="cep"
+                                           [mask]="'00000-000'"
+                                           [ngClass]="(formulario.get('endereco').get('cep').touched || submitted) && formulario.get('endereco').get('cep').invalid  ? 'is-invalid'
+                  : formulario.get('endereco').get('cep').touched && formulario.get('endereco').get('cep').valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="endereco_cidade">Cidade</label>
+                                    <input id="endereco_cidade"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="cidade"
+                                           [ngClass]="(formulario.get('endereco').get('cidade').touched || submitted) && formulario.get('endereco').get('cidade').invalid  ? 'is-invalid'
+                  : formulario.get('endereco').get('cidade').touched && formulario.get('endereco').get('cidade').valid  ? 'is-valid': null"
+                                    />
+                                </div>
+
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="uf">U.F</label>
+                                    <select name="" id="uf" class="form-control" formControlName="uf"
+                                            [ngClass]="(formulario.get('endereco').get('uf').touched || submitted) && formulario.get('endereco').get('uf').invalid  ? 'is-invalid'
+                  : formulario.get('endereco').get('uf').touched && formulario.get('endereco').get('uf').valid  ? 'is-valid': null"
+                                    >
+                                        <option *ngFor="let estado of estados" [ngValue]="estado">
+                                            {{ estado }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6 m-t-10">
+                                    <label for="email">E-mail</label>
+                                    <input id="email"
+                                           type="text"
+                                           class="form-control"
+                                           formControlName="email"
+                                           [ngClass]="(formulario.controls.email.touched || submitted) && formulario.controls.email.invalid  ? 'is-invalid'
+                  : formulario.controls.email.touched && formulario.controls.email.valid  ? 'is-valid': null"
+                                    />
+                                </div>
+                                <div class="col-12  m-t-20 text-center">
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Salvar
+                                        Informações
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Vendedor" *ngIf="editando">
+                    <ng-template ngbTabContent>
+                        <app-vendedor [isChildren]="true" [idFornecedor]="this.formulario.controls.id.value"></app-vendedor>
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+        </div>
+    </div>
+
+</app-modal-basic>

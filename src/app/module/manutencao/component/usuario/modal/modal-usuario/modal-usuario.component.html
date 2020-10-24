@@ -1,0 +1,504 @@
+<app-modal-basic #modal [dialogClass]="'modal-xl'">
+    <div class="app-modal-header">
+        <h4 class="modal-title">{{titulo}}</h4>
+        <button type="button" class="close basic-close" (click)="this.modal.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="app-modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="onSubmitFormulario()">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label for="pessoa">Pessoa</label>
+                    <select name="" id="pessoa" class="form-control" formControlName="pessoa" [attr.disabled] = "this.isAlterar ? true : null"
+                            [ngClass]="(formulario.controls.pessoa.touched || submitted) &&
+                            formulario.controls.pessoa.invalid  ? 'is-invalid' : formulario.controls.pessoa.touched &&
+                            formulario.controls.pessoa.valid  ? 'is-valid': null"
+                            (change)="this.habilitaFuncoes()"
+                            >
+                            <option *ngFor="let pessoa of pessoas" [ngValue]="pessoa">{{ pessoa.tipo + " " + pessoa.cadastrao.id + " - " + pessoa.cadastrao.nome }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label for="nome">Nome</label>
+                    <input id="nome"
+                           type="text"
+                           class="form-control"
+                           formControlName="nome"
+                           [ngClass]="(formulario.controls.nome.touched || submitted) && formulario.controls.nome.invalid  ? 'is-invalid'
+                           : formulario.controls.nome.touched && formulario.controls.nome.valid  ? 'is-valid': null"
+                           />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <label for="login">Login</label>
+                    <input id="login"
+                           type="text"
+                           class="form-control"
+                           formControlName="login"
+                           [ngClass]="(formulario.controls.login.touched || submitted) && formulario.controls.login.invalid  ? 'is-invalid'
+                           : formulario.controls.login.touched && formulario.controls.login.valid  ? 'is-valid': null"
+                           />
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <label for="situacao">Situação</label>
+                    <select name="" id="situacao" class="form-control" formControlName="situacao" [attr.disabled] = "!this._usuarioLogado.isAdmin() ? true : null"
+                            [ngClass]="(formulario.controls.situacao.touched || submitted) &&
+                            formulario.controls.situacao.invalid  ? 'is-invalid' : formulario.controls.situacao.touched &&
+                            formulario.controls.situacao.valid  ? 'is-valid': null"
+                            >
+                            <option *ngFor="let situacao of situacoes" [ngValue]="situacao.data">{{ situacao.label }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label for="email">E-mail</label>
+                    <input id="email"
+                           type="text"
+                           class="form-control"
+                           formControlName="email"
+                           [ngClass]="(formulario.controls.email.touched || submitted) && formulario.controls.email.invalid  ? 'is-invalid'
+                           : formulario.controls.email.touched && formulario.controls.email.valid  ? 'is-valid': null"
+                           />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                    <table class="table table-sm table_a centro">
+                        <tr>
+                            <th>Cadastros</th>
+                            <th>Menu</th>
+                            <th>Buscar</th>
+                            <th>Inserir</th>
+                            <th>Alterar</th>
+                            <th>Excluir</th>
+                        </tr>
+                        <tr>
+                            <td>Mercado</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckMenuMercado" class="form-control" formControlName="ckMenuMercado" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckBuscarMercado" class="form-control" formControlName="ckBuscarMercado" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckInserirMercado" class="form-control" formControlName="ckInserirMercado" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarMercado" class="form-control" formControlName="ckAlterarMercado" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckExcluirMercado" class="form-control" formControlName="ckExcluirMercado" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--*********************************************************************-->
+                        <tr>
+                            <td>Fornecedor</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckMenuFornecedor" class="form-control" formControlName="ckMenuFornecedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckBuscarFornecedor" class="form-control" formControlName="ckBuscarFornecedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckInserirFornecedor" class="form-control" formControlName="ckInserirFornecedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarFornecedor" class="form-control" formControlName="ckAlterarFornecedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckExcluirFornecedor" class="form-control" formControlName="ckExcluirFornecedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--*********************************************************************-->
+                        <tr>
+                            <td>Filial</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckMenuFilial" class="form-control" formControlName="ckMenuFilial" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckBuscarFilial" class="form-control" formControlName="ckBuscarFilial" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckInserirFilial" class="form-control" formControlName="ckInserirFilial" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarFilial" class="form-control" formControlName="ckAlterarFilial" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckExcluirFilial" class="form-control" formControlName="ckExcluirFilial" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--*********************************************************************-->
+                        <tr>
+                            <td>Vendedor</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckMenuVendedor" class="form-control" formControlName="ckMenuVendedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckBuscarVendedor" class="form-control" formControlName="ckBuscarVendedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckInserirVendedor" class="form-control" formControlName="ckInserirVendedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarVendedor" class="form-control" formControlName="ckAlterarVendedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckExcluirVendedor" class="form-control" formControlName="ckExcluirVendedor" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--*********************************************************************-->
+                        <tr>
+                            <td>Usuário</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckMenuUsuario" class="form-control" formControlName="ckMenuUsuario" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckBuscarUsuario" class="form-control" formControlName="ckBuscarUsuario" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckInserirUsuario" class="form-control" formControlName="ckInserirUsuario" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarUsuario" class="form-control" formControlName="ckAlterarUsuario" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckExcluirUsuario" class="form-control" formControlName="ckExcluirUsuario" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--*********************************************************************-->
+                    </table>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                    <table class="table table-sm table_a centro">
+                        <tr>
+                            <th>Movimentações</th>
+                            <th>Listar</th>
+                            <th>Imprimir</th>
+                            <th>Alterar</th>
+                            <th>Excluir</th>
+                            <th>Fechar</th>
+                            <th>Reabrir</th>
+                            <th>Digitar</th>
+                        </tr>
+                        <tr>
+                            <td>Cotações</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckListarCotacao" class="form-control" formControlName="ckListarCotacao" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckImprimirCotacao" class="form-control" formControlName="ckImprimirCotacao" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarCotacao" class="form-control" formControlName="ckAlterarCotacao" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckExcluirCotacao" class="form-control" formControlName="ckExcluirCotacao" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckFecharCotacao" class="form-control" formControlName="ckFecharCotacao" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckReabrirCotacao" class="form-control" formControlName="ckReabrirCotacao" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckDigitarCotacao" class="form-control" formControlName="ckDigitarCotacao" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--*********************************************************************-->
+                        <tr>
+                            <td>Pedidos</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckListarPedido" class="form-control" formControlName="ckListarPedido" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckImprimirPedido" class="form-control" formControlName="ckImprimirPedido" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckExcluirPedido" class="form-control" formControlName="ckExcluirPedido" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <!--*********************************************************************-->
+                        <!--*********************************************************************-->
+                        <tr>
+                            <td>Pedidos não Ganhos</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckListarPedidonaoGanho" class="form-control" formControlName="ckListarPedidonaoGanho" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <table class="table table-sm table_a centro">
+                        <tr>
+                            <td>Alterar senha</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarSenha" class="form-control" formControlName="ckAlterarSenha" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>Log de Operações</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckLogOperacoes" class="form-control" formControlName="ckLogOperacoes" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Alterar senha dos usuários</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckAlterarSenhaUsuarios" class="form-control" formControlName="ckAlterarSenhaUsuarios" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>Parâmetros</td>
+                            <td>
+                                <div class="checkbox-fade fade-in-default d- check-centro">
+                                    <label>
+                                        <input id="ckParametros" class="form-control" formControlName="ckParametros" type="checkbox" disabled>
+                                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <p>Ao salvar, as permissões serão ajustadas de acordo com o tipo do usuário</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="checkbox-fade fade-in-default d-">
+                        <label>
+                            <input id="agrupaCotacao" class="form-control" formControlName="agrupaCotacao" type="checkbox">
+                            <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                            <span class="text-inverse">Agrupa cotações por fornecedor/vendedor?</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12  m-t-20 text-center">
+                    <button type="submit" class="btn btn-primary waves-effect waves-light">Salvar Informações</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</app-modal-basic>

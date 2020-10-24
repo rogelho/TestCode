@@ -1,0 +1,94 @@
+<script src="basic-reg.component.ts"></script>
+<section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+  <!-- Container-fluid starts -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- Authentication card start -->
+        <div class="signup-card card-block auth-body mr-auto ml-auto">
+          <form class="md-float-material" [formGroup]="this._formGroup" (ngSubmit)="this.onSubmit()">
+            <div class="text-center">
+              <img src="assets/images/logo.png" alt="Gradient Able">
+            </div>
+            <div class="auth-box">
+              <div class="row m-b-20">
+                <div class="col-md-12">
+                  <h3 class="text-center txt-primary">Primeiro acesso, altere a sua senha.</h3>
+                </div>
+              </div>
+              <p class="text-inverse b-b-default text-right">Voltar ao <span class="voltar-login" (click)="this.onVoltarAoLogin()">Login.</span></p>
+              <div class="form-group">
+                <input type="password"
+                       class="form-control"
+                       formControlName="senhaAntiga"
+                       placeholder="Informe a senha antiga">
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.senhaAntiga.errors?.required && this._formGroup.controls.senhaAntiga.touched">
+                  Senha antiga é obrigatório.
+                </div>
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.senhaAntiga.errors?.mustMatch">
+                  Senha antiga está inválido.
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="password"
+                       class="form-control"
+                       formControlName="senhaNova"
+                       [(ngModel)]="this._novaSenha"
+                       placeholder="Informe a nova senha">
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.senhaNova.errors?.required && this._formGroup.controls.senhaNova.touched">
+                  Senha nova é obrigatório.
+                </div>
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.senhaNova.errors?.notMustMatch">
+                  Senha nova não pode ser igual a senha antiga.
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="password"
+                       class="form-control"
+                       formControlName="confirmacaoSenha"
+                       placeholder="Confirme a nova senha">
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.confirmacaoSenha.errors?.required && this._formGroup.controls.confirmacaoSenha.touched">
+                  Confirmação de senha é obrigatório.
+                </div>
+                <div class="messages text-danger text-left"
+                     *ngIf="this._formGroup.controls.confirmacaoSenha.errors?.mustMatch">
+                  Confirmação de senha não é compatível com a nova senha.
+                </div>
+              </div>
+              <div class="row m-t-30">
+                <div class="col-md-12">
+                  <button type="submit"
+                          [disabled]="this._formGroup.invalid"
+                          class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">
+                    <span *ngIf="!this._isLoading">CONFIRMAR</span>
+
+                    <div class="loading"
+                         *ngIf="this._isLoading">
+                      <div class="circ1"></div>
+                      <div class="circ2"></div>
+                      <div class="circ3"></div>
+                      <div class="circ4"></div>
+                    </div>
+
+                  </button>
+                </div>
+              </div>
+              <hr/>
+              <div class="row">
+                <div class="col-md-10">
+                  <p class="text-inverse text-left m-b-0">Versão {{this.onGetVersion()}}</p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<ng2-toasty></ng2-toasty>

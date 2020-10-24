@@ -1,0 +1,151 @@
+<div class="row">
+    <div class="col-md-4">
+        <app-filial (onChange)="this.onFilialChange($event)"></app-filial>
+    </div>
+    <div class="offset-md-3 col-md-5 align-c">
+        <app-filtro [filters]="this._filters"
+                    [filtersSelected]="[this._filtro]"
+                    (filter)="this.onFilter($event)"
+                    (remove)="this.onRemoveFilter($event)"></app-filtro>
+    </div>
+</div>
+
+<app-card [title]="'Listagem de pedidos'"
+          [cardOptionBlock]="true" [ngClass]="{'c-wait' : this.buscando}">
+    <ngx-datatable
+        #myTable
+        class="data-table table-responsive"
+        [rows]="this._rows"
+        [columnMode]="this._tableConfig.columnMode"
+        [headerHeight]="this._tableConfig.headerHeight"
+        [footerHeight]="this._tableConfig.footerHeight"
+        [rowHeight]="this._tableConfig.rowHeight"
+        [selected]="this._rowSelected"
+        [selectionType]="'checkbox'"
+        [count]="this._page.numReg"
+        [offset]="this._page.pagina"
+        [limit]="this._page.limit"
+        [externalPaging]="this._tableConfig.externalPaging"
+        [externalSorting]="this._tableConfig.externalSorting"
+        (page)="this.onPage($event)"
+        (sort)="this.onSort($event)"
+        [messages]="this.onGetMessages()">
+
+        <ngx-datatable-column [sortable]="false"
+                              [canAutoResize]="false"
+                              [draggable]="false"
+                              [resizeable]="false"
+                              [width]="45">
+            <ng-template class="datatable-checkbox"
+                         ngx-datatable-header-template
+                         let-value="value"
+                         let-allRowsSelected="allRowsSelected"
+                         let-selectFn="selectFn">
+                <div class="checkbox-fade fade-in-default datatable-header-cell-label">
+                    <label>
+                        <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"/>
+                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                    </label>
+                </div>
+
+            </ng-template>
+
+            <ng-template class="datatable-checkbox" ngx-datatable-cell-template let-value="value"
+                         let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+                <div class="checkbox-fade fade-in-default datatable-header-cell-label">
+                    <label>
+                        <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)"/>
+                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                    </label>
+                </div>
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Cotação"
+                              [prop]="'cotacao'"
+                              [resizeable]="false"
+                              [width]="100"
+                              [maxWidth]="130">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.cotacao }}
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Filial"
+                              [prop]="'codfilial'"
+                              [resizeable]="false"
+                              [width]="80"
+                              [maxWidth]="90">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.codfilial }}
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Lançado"
+                              [prop]="'lancado'"
+                              [resizeable]="false"
+                              [width]="110"
+                              [maxWidth]="110">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.lancado | date: 'dd/MM/yyyy' }}
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="CNPJ Cliente Sg"
+                              [prop]="'cnpjClienteSG'"
+                              [resizeable]="false"
+                              [width]="80"
+                              [maxWidth]="160">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.cnpjClienteSG | mask: '00.000.000/0000-00' }}
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Mercado"
+                              [prop]="'mercado'"
+                              [resizeable]="false"
+                              [width]="80"
+                              [maxWidth]="300">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.mercado }}
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Fornecedor"
+                              [prop]="'nomefornecedor'"
+                              [resizeable]="false"
+                              [width]="300"
+                              [maxWidth]="300">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+
+                {{ row.cnpjfornecedor }} - {{ row.nomefornecedor }}
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Vendedor"
+                              [prop]="'vendedor'"
+                              [resizeable]="false"
+                              [width]="80"
+                              [maxWidth]="300">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.vendedor }}
+            </ng-template>
+        </ngx-datatable-column>
+    </ngx-datatable>
+
+    <div class="row m-t-10 text-right">
+        <div class="offset-md-7 col-md-5">
+            <button class="btn btn-danger m-l-5"
+                    type="button"
+                    (click)="this.onExcluir()">
+                <i class="icofont icofont-trash"></i>Excluir
+            </button>
+
+            <button class="btn btn-success m-l-5"
+                    type="button"
+                    (click)="this.onImprimir()">
+                <i class="icofont icofont-print"></i>Imprimir
+            </button>
+        </div>
+    </div>
+</app-card>

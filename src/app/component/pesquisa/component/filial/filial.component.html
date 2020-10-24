@@ -1,0 +1,11 @@
+<div class="card" *ngIf="this._options.length">
+    <div class="header m-b-10">
+        <h5 class="f-14">{{this._title}}</h5>
+    </div>
+    <div class="content">
+        <ng-select [ngClass]="'ng-select'"
+                   [options]="this._options"
+                   [(ngModel)]="this._optionSelected"
+                   (ngModelChange)="this.onModelChange()"></ng-select>
+    </div>
+</div>

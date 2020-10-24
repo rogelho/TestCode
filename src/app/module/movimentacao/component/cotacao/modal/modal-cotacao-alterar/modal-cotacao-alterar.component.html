@@ -1,0 +1,140 @@
+<app-modal-basic #modal [dialogClass]="'modal-lg'">
+    <div class="app-modal-header">
+        <h4 class="modal-title">Alterando cotação {{this._cotacao.cotacao}}</h4>
+        <button type="button" class="close basic-close" (click)="this.modal.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="app-modal-body">
+        <div class="row">
+            <div class="offset-md-10 col-md-2">
+                <label for="dataCotacao">Data cotação</label>
+                <input id="dataCotacao"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.dataCotacao | date: 'dd/MM/yyyy'"
+                       disabled/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="cnpjClienteSG">CNPJ cliente SG</label>
+                <input id="cnpjClienteSG"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.cnpjClienteSG"
+                       [mask]="'00.000.000/0000-00'"
+                       disabled/>
+            </div>
+            <div class="col-md-3">
+                <label for="cnpjFornecedor">CNPJ fornecedor</label>
+                <input id="cnpjFornecedor"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.cnpjFornecedor"
+                       disabled/>
+            </div>
+            <div class="col-md-3">
+                <label for="dataDigitacao">Data digitação</label>
+                <input id="dataDigitacao"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.dataDigitacao | date: 'dd/MM/yyyy'"
+                       disabled/>
+            </div>
+            <div class="col-md-3">
+                <label for="dataFechamento">Data fechamento</label>
+                <input id="dataFechamento"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="!this._cotacao.dataFechamento ? '' : this._cotacao.dataFechamento | date: 'dd/MM/yyyy'"
+                       disabled/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="dataEncerramento">Data encerramento</label>
+                <input id="dataEncerramento"
+                       type="datetime-local"
+                       class="form-control"
+                       (blur)="this.onBlurDataEncerramento()"
+                       [(ngModel)]="this._dataEncerramento"/>
+            </div>
+            <div class="col-md-2">
+                <label for="prazo">Prazo</label>
+                <input id="prazo"
+                       type="number"
+                       class="form-control"
+                       [min]="0"
+                       (change)="this.onChangePrazo()"
+                       [(ngModel)]="this._cotacao.prazoCotacao"/>
+            </div>
+            <div class="col-md-2">
+                <label for="prazo1">Prazo 1</label>
+                <input id="prazo1"
+                       type="number"
+                       class="form-control"
+                       [ngModel]="this._cotacao.prazo1"
+                       disabled/>
+            </div>
+            <div class="col-md-2">
+                <label for="prazo2">Prazo 2</label>
+                <input id="prazo2"
+                       type="number"
+                       class="form-control"
+                       [ngModel]="this._cotacao.prazo2"
+                       disabled/>
+            </div>
+            <div class="col-md-2">
+                <label for="prazo3">Prazo 3</label>
+                <input id="prazo3"
+                       type="number"
+                       class="form-control"
+                       [ngModel]="this._cotacao.prazo3"
+                       disabled/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="mercado">Mercado</label>
+                <input id="mercado"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._nomeMercado"
+                       disabled/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="fechado">Fechado?</label>
+                <input id="fechado"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._fechado"
+                       disabled/>
+            </div>
+            <div class="col-md-10">
+                <label for="fechadoPor">Fechado por</label>
+                <input id="fechadoPor"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.fechadoPor"
+                       disabled/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="observacao">Observação</label>
+                <textarea id="observacao"
+                       type="text"
+                       class="form-control"
+                       [ngModel]="this._cotacao.observacao"
+                       disabled></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="app-modal-footer">
+        <button type="button" class="btn btn-primary waves-effect waves-light" (click)="this.onSalvar()">Salvar Alterações
+        </button>
+    </div>
+</app-modal-basic>

@@ -1,0 +1,47 @@
+@import "~src/scss/partials/variables";
+
+.loading {
+
+  position: relative;
+  top: 12px;
+
+  > div {
+    margin: 2px;
+    background-color: var(--white);
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    -webkit-animation: stretchdelay 0.7s infinite ease-in-out;
+    animation: stretchdelay 0.7s infinite ease-in-out;
+  }
+
+  .circ2 {
+    -webkit-animation-delay: -0.6s;
+    animation-delay: -0.6s;
+  }
+
+  .circ3 {
+    -webkit-animation-delay: -0.5s;
+    animation-delay: -0.5s;
+  }
+
+  .circ4 {
+    -webkit-animation-delay: -0.4s;
+    animation-delay: -0.4s;
+  }
+
+  .circ5 {
+    -webkit-animation-delay: -0.3s;
+    animation-delay: -0.3s;
+  }
+
+}
+
+.voltar-login {
+  cursor: pointer;
+}
+
+span.voltar-login:hover {
+  color: $primary-color;
+}
